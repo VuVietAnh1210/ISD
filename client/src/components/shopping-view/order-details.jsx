@@ -12,33 +12,33 @@ function ShoppingOrderDetailsView({ orderDetails }) {
       <div className="grid gap-6">
         <div className="grid gap-2">
           <div className="flex mt-6 items-center justify-between">
-            <p className="font-medium">Order ID</p>
+            <p className="font-medium">Mã đơn hàng</p>
             <Label>{orderDetails?._id}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
-            <p className="font-medium">Order Date</p>
+            <p className="font-medium">Ngày đặt hàng</p>
             <Label>{orderDetails?.orderDate.split("T")[0]}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
-            <p className="font-medium">Order Price</p>
-            <Label>${orderDetails?.totalAmount}</Label>
+            <p className="font-medium">GIá đơn hàng</p>
+            <Label>{orderDetails?.totalAmount?.toLocaleString('vi-VN')} VNĐ</Label>
           </div>
-          <div className="flex mt-2 items-center justify-between">
+          {/* <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Payment method</p>
             <Label>{orderDetails?.paymentMethod}</Label>
-          </div>
+          </div> */}
           <div className="flex mt-2 items-center justify-between">
-            <p className="font-medium">Payment Status</p>
+            <p className="font-medium">Trạng thái thanh toán</p>
             <Label>{orderDetails?.paymentStatus}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
-            <p className="font-medium">Order Status</p>
+            <p className="font-medium">Trạng thái đơn hàng</p>
             <Label>
               <Badge
                 className={`py-1 px-3 ${
-                  orderDetails?.orderStatus === "confirmed"
+                  orderDetails?.orderStatus === "Đã xác nhận"
                     ? "bg-green-500"
-                    : orderDetails?.orderStatus === "rejected"
+                    : orderDetails?.orderStatus === "Bị từ chối"
                     ? "bg-red-600"
                     : "bg-black"
                 }`}
@@ -51,14 +51,14 @@ function ShoppingOrderDetailsView({ orderDetails }) {
         <Separator />
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <div className="font-medium">Order Details</div>
+            <div className="font-medium">Chi tiết đơn hàng </div>
             <ul className="grid gap-3">
               {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
                 ? orderDetails?.cartItems.map((item) => (
                     <li className="flex items-center justify-between">
-                      <span>Title: {item.title}</span>
-                      <span>Quantity: {item.quantity}</span>
-                      <span>Price: ${item.price}</span>
+                      <span>Tên sản phẩm: {item.title}</span>
+                      <span>Số lượng: {item.quantity}</span>
+                      <span>Giá sản phẩm: {item.price?.toLocaleString('vi-VN')} VNĐ</span>
                     </li>
                   ))
                 : null}
@@ -67,14 +67,13 @@ function ShoppingOrderDetailsView({ orderDetails }) {
         </div>
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <div className="font-medium">Shipping Info</div>
+            <div className="font-medium">Thông tin vận chuyển</div>
             <div className="grid gap-0.5 text-muted-foreground">
-              <span>{user.userName}</span>
-              <span>{orderDetails?.addressInfo?.address}</span>
-              <span>{orderDetails?.addressInfo?.city}</span>
-              <span>{orderDetails?.addressInfo?.pincode}</span>
-              <span>{orderDetails?.addressInfo?.phone}</span>
-              <span>{orderDetails?.addressInfo?.notes}</span>
+              <span>Tên: {user.userName}</span>
+              <span>Địa chỉ: {orderDetails?.addressInfo?.address}</span>
+              <span>Thành phố: {orderDetails?.addressInfo?.city}</span>
+              <span>Số điện thoại: {orderDetails?.addressInfo?.phone}</span>
+              <span>Ghi chú: {orderDetails?.addressInfo?.notes}</span>
             </div>
           </div>
         </div>

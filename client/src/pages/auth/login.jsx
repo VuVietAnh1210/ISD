@@ -36,22 +36,22 @@ function AuthLogin() {
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Sign in to your account
+        <h1 className="text-x font-light tracking-tight text-foreground">
+          Chào mừng quay trở lại với Thu Hân, vui lòng nhập thông tin của bạn!
         </h1>
         <p className="mt-2">
-          Don't have an account
+          Bạn chưa có tài khoản?
           <Link
             className="font-medium ml-2 text-primary hover:underline"
             to="/auth/register"
           >
-            Register
+            Đăng ký ngay.
           </Link>
         </p>
       </div>
       <CommonForm
         formControls={loginFormControls}
-        buttonText={"Sign In"}
+        buttonText={"Đăng nhập"}
         formData={formData}
         setFormData={setFormData}
         onSubmit={onSubmit}

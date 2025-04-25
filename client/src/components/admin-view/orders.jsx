@@ -37,22 +37,33 @@ function AdminOrdersView() {
   useEffect(() => {
     if (orderDetails !== null) setOpenDetailsDialog(true);
   }, [orderDetails]);
+  const statusColors = {
+    "Chờ xác nhận": "bg-yellow-500 hover:bg-yellow-600",
+    "Đã xác nhận": "bg-orange-500 hover:bg-orange-600",
+    "Đang giao hàng": "bg-blue-500 hover:bg-blue-600",
+    "Đã giao": "bg-green-500 hover:bg-green-600",
+    "Đang vận chuyển": "bg-indigo-500 hover:bg-indigo-600",
+    "Bị từ chối": "bg-red-600 hover:bg-red-700",
+  };
+  
+  const defaultColor = "bg-black hover:bg-gray-700";
+  
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>All Orders</CardTitle>
+        <CardTitle>Tất cả các đơn hàng</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Order Status</TableHead>
-              <TableHead>Order Price</TableHead>
+              <TableHead>Mã đơn hàng</TableHead>
+              <TableHead>Ngày đặt hàng</TableHead>
+              <TableHead>Giá đơn hàng</TableHead>
+              <TableHead>Trạng thái đơn hàng</TableHead>
               <TableHead>
-                <span className="sr-only">Details</span>
+                <span className="sr-only">Chi tiết</span>
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -62,20 +73,19 @@ function AdminOrdersView() {
                   <TableRow>
                     <TableCell>{orderItem?._id}</TableCell>
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
+                    <TableCell>{orderItem?.totalAmount?.toLocaleString('vi-VN')} VNĐ</TableCell>
+
                     <TableCell>
-                      <Badge
-                        className={`py-1 px-3 ${
-                          orderItem?.orderStatus === "confirmed"
-                            ? "bg-green-500"
-                            : orderItem?.orderStatus === "rejected"
-                            ? "bg-red-600"
-                            : "bg-black"
-                        }`}
-                      >
-                        {orderItem?.orderStatus}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>${orderItem?.totalAmount}</TableCell>
+  <Badge
+    className={`py-1 px-3 text-white ${
+      statusColors[orderItem?.orderStatus] || defaultColor
+    }`}
+  >
+    {orderItem?.orderStatus}
+  </Badge>
+</TableCell>
+
+                    
                     <TableCell>
                       <Dialog
                         open={openDetailsDialog}
@@ -89,7 +99,7 @@ function AdminOrdersView() {
                             handleFetchOrderDetails(orderItem?._id)
                           }
                         >
-                          View Details
+                          Xem chi tiết
                         </Button>
                         <AdminOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>

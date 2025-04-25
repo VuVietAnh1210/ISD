@@ -7,25 +7,33 @@ import {
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import logoThuHan from '../../assets/logo-thu-han.png';
+
 
 const adminSidebarMenuItems = [
   {
     id: "dashboard",
-    label: "Dashboard",
+    label: "Đơn hàng",
     path: "/admin/dashboard",
     icon: <LayoutDashboard />,
   },
   {
     id: "products",
-    label: "Products",
+    label: "Sản phẩm",
     path: "/admin/products",
     icon: <ShoppingBasket />,
   },
   {
     id: "orders",
-    label: "Orders",
+    label: "Lịch sử đặt hàng",
     path: "/admin/orders",
     icon: <BadgeCheck />,
+  },
+  {
+    id: "revenue",
+    label: "Doanh thu",
+    path: "/admin/revenue",
+    icon: <ChartNoAxesCombined />,
   },
 ];
 
@@ -60,9 +68,16 @@ function AdminSideBar({ open, setOpen }) {
         <SheetContent side="left" className="w-64">
           <div className="flex flex-col h-full">
             <SheetHeader className="border-b">
-              <SheetTitle className="flex gap-2 mt-5 mb-5">
-                <ChartNoAxesCombined size={30} />
-                <h1 className="text-2xl font-extrabold">Admin Panel</h1>
+              <SheetTitle className="flex items-center justify-center mt-4 mb-4">
+                <img
+                  src={logoThuHan}
+                  alt="Logo Trang chủ"
+                  className="h-30 w-auto cursor-pointer" 
+                  onClick={() => {
+                     navigate("/admin/dashboard"); 
+                     if (setOpen) setOpen(false); 
+                  }}
+                />
               </SheetTitle>
             </SheetHeader>
             <MenuItems setOpen={setOpen} />
@@ -70,13 +85,18 @@ function AdminSideBar({ open, setOpen }) {
         </SheetContent>
       </Sheet>
       <aside className="hidden w-64 flex-col border-r bg-background p-6 lg:flex">
+        {/* --- ĐÃ SỬA Ở ĐÂY (ASIDE) --- */}
         <div
-          onClick={() => navigate("/admin/dashboard")}
-          className="flex cursor-pointer items-center gap-2"
+          onClick={() => navigate("/admin/dashboard")} // Giả sử navigate đã được định nghĩa
+          className="flex cursor-pointer items-center justify-center mb-6"
         >
-          <ChartNoAxesCombined size={30} />
-          <h1 className="text-2xl font-extrabold">Admin Panel</h1>
+          <img
+            src={logoThuHan} 
+            alt="Logo Trang chủ"
+            className="h-30 w-auto" 
+          />
         </div>
+        {/* --- KẾT THÚC SỬA (ASIDE) --- */}
         <MenuItems />
       </aside>
     </Fragment>

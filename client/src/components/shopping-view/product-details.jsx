@@ -1,4 +1,4 @@
-import { StarIcon } from "lucide-react";
+"use client";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
@@ -12,25 +12,30 @@ import { Label } from "../ui/label";
 import StarRatingComponent from "../common/star-rating";
 import { useEffect, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
+import { formatPrice } from "@/lib/utils";
+import cottonImg from "@/assets/cotton.jpg";
+import polyesterImg from "@/assets/polyester.jpg";
+import woolImg from "@/assets/wool.webp";
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
+  // Thêm state để theo dõi chất liệu và màu sắc được chọn
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
-
   const { toast } = useToast();
 
   function handleRatingChange(getRating) {
-    console.log(getRating, "getRating");
-
     setRating(getRating);
   }
 
   function handleAddToCart(getCurrentProductId, getTotalStock) {
-    let getCartItems = cartItems.items || [];
+    const getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
@@ -40,25 +45,28 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
           toast({
-            title: `Only ${getQuantity} quantity can be added for this item`,
+            title: `Chỉ có thể thêm ${getQuantity} sản phẩm này`,
             variant: "destructive",
           });
-
           return;
         }
       }
     }
+
+    // Gửi thông tin chất liệu và màu sắc cùng với sản phẩm
     dispatch(
       addToCart({
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
+        material: selectedMaterial, // Thêm chất liệu
+        color: selectedColor, // Thêm màu sắc
       })
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
         toast({
-          title: "Product is added to cart",
+          title: "Đã thêm sản phẩm vào giỏ hàng",
         });
       }
     });
@@ -69,6 +77,8 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     dispatch(setProductDetails());
     setRating(0);
     setReviewMsg("");
+    setSelectedMaterial(null); // Reset chất liệu
+    setSelectedColor(null); // Reset màu sắc
   }
 
   function handleAddReview() {
@@ -86,7 +96,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         setReviewMsg("");
         dispatch(getReviews(productDetails?._id));
         toast({
-          title: "Review added successfully!",
+          title: "Đã thêm đánh giá thành công!",
         });
       }
     });
@@ -95,8 +105,6 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   useEffect(() => {
     if (productDetails !== null) dispatch(getReviews(productDetails?._id));
   }, [productDetails]);
-
-  console.log(reviews, "reviews");
 
   const averageReview =
     reviews && reviews.length > 0
@@ -109,7 +117,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
         <div className="relative overflow-hidden rounded-lg">
           <img
-            src={productDetails?.image}
+            src={productDetails?.image || "/placeholder.svg"}
             alt={productDetails?.title}
             width={600}
             height={600}
@@ -129,92 +137,147 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 productDetails?.salePrice > 0 ? "line-through" : ""
               }`}
             >
-              ${productDetails?.price}
+              {formatPrice(productDetails?.price)}
             </p>
             {productDetails?.salePrice > 0 ? (
               <p className="text-2xl font-bold text-muted-foreground">
-                ${productDetails?.salePrice}
+                {formatPrice(productDetails?.salePrice)}
               </p>
             ) : null}
           </div>
-          <div className="flex items-center gap-2 mt-2">
-            <div className="flex items-center gap-0.5">
-              <StarRatingComponent rating={averageReview} />
-            </div>
-            <span className="text-muted-foreground">
-              ({averageReview.toFixed(2)})
-            </span>
-          </div>
-          <div className="mt-5 mb-5">
-            {productDetails?.totalStock === 0 ? (
-              <Button className="w-full opacity-60 cursor-not-allowed">
-                Out of Stock
-              </Button>
-            ) : (
-              <Button
-                className="w-full"
-                onClick={() =>
-                  handleAddToCart(
-                    productDetails?._id,
-                    productDetails?.totalStock
-                  )
-                }
-              >
-                Add to Cart
-              </Button>
-            )}
-          </div>
-          <Separator />
-          <div className="max-h-[300px] overflow-auto">
-            <h2 className="text-xl font-bold mb-4">Reviews</h2>
-            <div className="grid gap-6">
-              {reviews && reviews.length > 0 ? (
-                reviews.map((reviewItem) => (
-                  <div className="flex gap-4">
-                    <Avatar className="w-10 h-10 border">
-                      <AvatarFallback>
-                        {reviewItem?.userName[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold">{reviewItem?.userName}</h3>
-                      </div>
-                      <div className="flex items-center gap-0.5">
-                        <StarRatingComponent rating={reviewItem?.reviewValue} />
-                      </div>
-                      <p className="text-muted-foreground">
-                        {reviewItem.reviewMessage}
-                      </p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <h1>No Reviews</h1>
-              )}
-            </div>
-            <div className="mt-10 flex-col flex gap-2">
-              <Label>Write a review</Label>
-              <div className="flex gap-1">
-                <StarRatingComponent
-                  rating={rating}
-                  handleRatingChange={handleRatingChange}
-                />
+
+          <div className="space-y-5 mt-6">
+            <div>
+              <h3 className="font-semibold mb-2">Số đo</h3>
+              <div className="grid grid-cols-3 gap-2">
+                <Input type="number" placeholder="Ngực (cm)" />
+                <Input type="number" placeholder="Eo (cm)" />
+                <Input type="number" placeholder="Hông (cm)" />
               </div>
-              <Input
-                name="reviewMsg"
-                value={reviewMsg}
-                onChange={(event) => setReviewMsg(event.target.value)}
-                placeholder="Write a review..."
-              />
-              <Button
-                onClick={handleAddReview}
-                disabled={reviewMsg.trim() === ""}
-              >
-                Submit
-              </Button>
+            </div>
+
+            {/* Chất liệu vải */}
+            <div>
+              <h3 className="font-semibold mb-2">Chất liệu vải</h3>
+              <div className="flex gap-3">
+                <label className="flex flex-col items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="fabric"
+                    className="sr-only"
+                    onChange={() => setSelectedMaterial("cotton")}
+                    checked={selectedMaterial === "cotton"}
+                  />
+                  <img
+                    src={cottonImg}
+                    className={`w-12 h-12 rounded-full border ${
+                      selectedMaterial === "cotton"
+                        ? "border-blue-500 border-2"
+                        : "border-gray-200"
+                    }`}
+                  />
+                  <span className="text-xs mt-1">Cotton</span>
+                </label>
+                <label className="flex flex-col items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="fabric"
+                    className="sr-only"
+                    onChange={() => setSelectedMaterial("lua")}
+                    checked={selectedMaterial === "lua"}
+                  />
+                  <img
+                    src={polyesterImg}
+                    className={`w-12 h-12 rounded-full border ${
+                      selectedMaterial === "lua"
+                        ? "border-blue-500 border-2"
+                        : "border-gray-200"
+                    }`}
+                  />
+                  <span className="text-xs mt-1">Lụa</span>
+                </label>
+                <label className="flex flex-col items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="fabric"
+                    className="sr-only"
+                    onChange={() => setSelectedMaterial("kaki")}
+                    checked={selectedMaterial === "kaki"}
+                  />
+                  <img
+                    src={woolImg}
+                    className={`w-12 h-12 rounded-full border ${
+                      selectedMaterial === "kaki"
+                        ? "border-blue-500 border-2"
+                        : "border-gray-200"
+                    }`}
+                  />
+                  <span className="text-xs mt-1">Kaki</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Màu sắc */}
+            <div>
+              <h3 className="font-semibold mb-2">Màu sắc</h3>
+              <div className="flex gap-3">
+                <label className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="color"
+                    className="sr-only"
+                    onChange={() => setSelectedColor("blue")}
+                    checked={selectedColor === "blue"}
+                  />
+                  <div
+                    className={`w-8 h-8 rounded-full bg-blue-600 border-2 ${
+                      selectedColor === "blue" ? "border-blue-500" : "border-black"
+                    } cursor-pointer`}
+                  ></div>
+                </label>
+                <label className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="color"
+                    className="sr-only"
+                    onChange={() => setSelectedColor("black")}
+                    checked={selectedColor === "black"}
+                  />
+                  <div
+                    className={`w-8 h-8 rounded-full bg-black border-2 ${
+                      selectedColor === "black" ? "border-blue-500" : "border-black"
+                    } cursor-pointer`}
+                  ></div>
+                </label>
+                <label className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="color"
+                    className="sr-only"
+                    onChange={() => setSelectedColor("red")}
+                    checked={selectedColor === "red"}
+                  />
+                  <div
+                    className={`w-8 h-8 rounded-full bg-red-700 border-2 ${
+                      selectedColor === "red" ? "border-blue-500" : "border-black"
+                    } cursor-pointer`}
+                  ></div>
+                </label>
+              </div>
             </div>
           </div>
+
+          <div className="mt-5 mb-5">
+        <Button
+          className="w-full"
+          onClick={() =>
+            handleAddToCart(productDetails?._id, productDetails?.totalStock)
+          }
+        >
+          Thêm vào giỏ hàng
+        </Button>
+      </div>
+          <Separator />
         </div>
       </DialogContent>
     </Dialog>

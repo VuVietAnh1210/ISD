@@ -48,7 +48,7 @@ function SearchProducts() {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
           toast({
-            title: `Only ${getQuantity} quantity can be added for this item`,
+            title: `Chỉ có thể thêm ${getQuantity} số lượng cho sản phẩm này`,
             variant: "destructive",
           });
 
@@ -67,7 +67,7 @@ function SearchProducts() {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
         toast({
-          title: "Product is added to cart",
+          title: "Sản phẩm đã được thêm vào giỏ hàng",
         });
       }
     });
@@ -93,12 +93,12 @@ function SearchProducts() {
             name="keyword"
             onChange={(event) => setKeyword(event.target.value)}
             className="py-6"
-            placeholder="Search Products..."
+            placeholder="Tìm kiếm sản phẩm..."
           />
         </div>
       </div>
       {!searchResults.length ? (
-        <h1 className="text-5xl font-extrabold">No result found!</h1>
+        <h1 className="text-3xl font-bold">không tìm thấy kết quả nào!</h1>
       ) : null}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {searchResults.map((item) => (
@@ -119,3 +119,5 @@ function SearchProducts() {
 }
 
 export default SearchProducts;
+
+

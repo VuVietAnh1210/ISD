@@ -22,27 +22,34 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
   return (
     <SheetContent className="sm:max-w-md">
       <SheetHeader>
-        <SheetTitle>Your Cart</SheetTitle>
+        <SheetTitle>Giỏ hàng của bạn</SheetTitle>
       </SheetHeader>
+
       <div className="mt-8 space-y-4">
-        {cartItems && cartItems.length > 0
-          ? cartItems.map((item) => <UserCartItemsContent cartItem={item} />)
-          : null}
+        {cartItems && cartItems.length > 0 ? (
+          cartItems.map((item) => <UserCartItemsContent key={item.id} cartItem={item} />)
+        ) : (
+          <p className="text-center text-gray-500">Giỏ hàng của bạn đang trống</p>
+        )}
       </div>
+
       <div className="mt-8 space-y-4">
         <div className="flex justify-between">
-          <span className="font-bold">Total</span>
-          <span className="font-bold">${totalCartAmount}</span>
+          <span className="font-bold">Tổng</span>
+          <span className="font-bold">{totalCartAmount.toLocaleString()} ₫</span>
         </div>
+
       </div>
+
       <Button
         onClick={() => {
           navigate("/shop/checkout");
           setOpenCartSheet(false);
         }}
         className="w-full mt-6"
+        disabled={cartItems.length === 0} // Disable nếu giỏ hàng trống
       >
-        Checkout
+        Thanh toán
       </Button>
     </SheetContent>
   );

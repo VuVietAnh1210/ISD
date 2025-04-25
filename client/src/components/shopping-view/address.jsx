@@ -16,28 +16,62 @@ const initialAddressFormData = {
   address: "",
   city: "",
   phone: "",
-  pincode: "",
   notes: "",
+};
+
+const initialErrors = {
+  phone: "",
 };
 
 function Address({ setCurrentSelectedAddress, selectedId }) {
   const [formData, setFormData] = useState(initialAddressFormData);
+  const [errors, setErrors] = useState(initialErrors);
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { addressList } = useSelector((state) => state.shopAddress);
   const { toast } = useToast();
 
+  // Sửa hàm validatePhoneNumber
+  const validatePhoneNumber = (phone) => {
+    // Không hiển thị lỗi nếu ô số điện thoại trống
+    if (!phone || phone.trim() === "") {
+      return "";
+    }
+
+    const phoneRegex = /^0\d{9}$/; // Bắt đầu bằng 0 và có đúng 10 chữ số
+    if (!phoneRegex.test(phone)) {
+      return "Số điện thoại không hợp lệ. Vui lòng nhập lại";
+    }
+    return "";
+  };
+
+  const handleFormChange = (newFormData) => {
+    setFormData(newFormData);
+    const phoneError = validatePhoneNumber(newFormData.phone);
+    setErrors({ ...errors, phone: phoneError });
+  };
+
   function handleManageAddress(event) {
     event.preventDefault();
 
-    if (addressList.length >= 3 && currentEditedId === null) {
-      setFormData(initialAddressFormData);
+    const phoneError = validatePhoneNumber(formData.phone);
+    if (phoneError) {
+      setErrors({ ...errors, phone: phoneError });
       toast({
-        title: "You can add max 3 addresses",
+        title: phoneError,
         variant: "destructive",
       });
+      return;
+    }
 
+    if (addressList.length >= 3 && currentEditedId === null) {
+      setFormData(initialAddressFormData);
+      setErrors(initialErrors);
+      toast({
+        title: "Bạn chỉ có thể thêm tối đa 3 địa chỉ",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -53,8 +87,9 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
             dispatch(fetchAllAddresses(user?.id));
             setCurrentEditedId(null);
             setFormData(initialAddressFormData);
+            setErrors(initialErrors);
             toast({
-              title: "Address updated successfully",
+              title: "Địa chỉ đã được cập nhật thành công",
             });
           }
         })
@@ -67,8 +102,9 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
           if (data?.payload?.success) {
             dispatch(fetchAllAddresses(user?.id));
             setFormData(initialAddressFormData);
+            setErrors(initialErrors);
             toast({
-              title: "Address added successfully",
+              title: "Địa chỉ đã được thêm thành công",
             });
           }
         });
@@ -81,7 +117,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
       if (data?.payload?.success) {
         dispatch(fetchAllAddresses(user?.id));
         toast({
-          title: "Address deleted successfully",
+          title: "Địa chỉ đã được xóa thành công",
         });
       }
     });
@@ -89,20 +125,24 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
 
   function handleEditAddress(getCuurentAddress) {
     setCurrentEditedId(getCuurentAddress?._id);
-    setFormData({
+    const newFormData = {
       ...formData,
       address: getCuurentAddress?.address,
       city: getCuurentAddress?.city,
       phone: getCuurentAddress?.phone,
-      pincode: getCuurentAddress?.pincode,
       notes: getCuurentAddress?.notes,
-    });
+    };
+    setFormData(newFormData);
+    const phoneError = validatePhoneNumber(newFormData.phone);
+    setErrors({ ...errors, phone: phoneError });
   }
 
   function isFormValid() {
-    return Object.keys(formData)
-      .map((key) => formData[key].trim() !== "")
-      .every((item) => item);
+    return (
+      Object.keys(formData)
+        .map((key) => formData[key].trim() !== "")
+        .every((item) => item) && !errors.phone
+    );
   }
 
   useEffect(() => {
@@ -113,10 +153,11 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
 
   return (
     <Card>
-      <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2  gap-2">
+      <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
         {addressList && addressList.length > 0
           ? addressList.map((singleAddressItem) => (
               <AddressCard
+                key={singleAddressItem._id}
                 selectedId={selectedId}
                 handleDeleteAddress={handleDeleteAddress}
                 addressInfo={singleAddressItem}
@@ -128,17 +169,18 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
       </div>
       <CardHeader>
         <CardTitle>
-          {currentEditedId !== null ? "Edit Address" : "Add New Address"}
+          {currentEditedId !== null ? "Sửa địa chỉ" : "Thêm địa chỉ mới"}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <CommonForm
           formControls={addressFormControls}
           formData={formData}
-          setFormData={setFormData}
-          buttonText={currentEditedId !== null ? "Edit" : "Add"}
+          setFormData={handleFormChange}
+          buttonText={currentEditedId !== null ? "Sửa" : "Thêm"}
           onSubmit={handleManageAddress}
           isBtnDisabled={!isFormValid()}
+          errors={errors}
         />
       </CardContent>
     </Card>

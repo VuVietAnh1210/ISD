@@ -1,5 +1,5 @@
 function UnauthPage() {
-  return <h1>You don't have access to view this page</h1>;
+  return <h1>Bạn không có quyền truy cập để xem trang này.</h1>;
 }
 
 export default UnauthPage;

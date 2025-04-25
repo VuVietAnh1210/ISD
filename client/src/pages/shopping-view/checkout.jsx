@@ -17,8 +17,6 @@ function ShoppingCheckout() {
   const dispatch = useDispatch();
   const { toast } = useToast();
 
-  console.log(currentSelectedAddress, "cartItems");
-
   const totalCartAmount =
     cartItems && cartItems.items && cartItems.items.length > 0
       ? cartItems.items.reduce(
@@ -32,10 +30,15 @@ function ShoppingCheckout() {
         )
       : 0;
 
+  const formattedTotal = totalCartAmount.toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+
   function handleInitiatePaypalPayment() {
     if (cartItems.length === 0) {
       toast({
-        title: "Your cart is empty. Please add items to proceed",
+        title: "Giỏ hàng của bạn trống. Vui lòng thêm các mục để tiếp tục",
         variant: "destructive",
       });
 
@@ -43,7 +46,7 @@ function ShoppingCheckout() {
     }
     if (currentSelectedAddress === null) {
       toast({
-        title: "Please select one address to proceed.",
+        title: "Vui lòng chọn một địa chỉ để tiếp tục thanh toán.",
         variant: "destructive",
       });
 
@@ -67,7 +70,6 @@ function ShoppingCheckout() {
         addressId: currentSelectedAddress?._id,
         address: currentSelectedAddress?.address,
         city: currentSelectedAddress?.city,
-        pincode: currentSelectedAddress?.pincode,
         phone: currentSelectedAddress?.phone,
         notes: currentSelectedAddress?.notes,
       },
@@ -82,7 +84,6 @@ function ShoppingCheckout() {
     };
 
     dispatch(createNewOrder(orderData)).then((data) => {
-      console.log(data, "sangam");
       if (data?.payload?.success) {
         setIsPaymemntStart(true);
       } else {
@@ -113,15 +114,13 @@ function ShoppingCheckout() {
             : null}
           <div className="mt-8 space-y-4">
             <div className="flex justify-between">
-              <span className="font-bold">Total</span>
-              <span className="font-bold">${totalCartAmount}</span>
+              <span className="font-bold">Tổng</span>
+              <span className="font-bold">{formattedTotal}</span>
             </div>
           </div>
           <div className="mt-4 w-full">
             <Button onClick={handleInitiatePaypalPayment} className="w-full">
-              {isPaymentStart
-                ? "Processing Paypal Payment..."
-                : "Checkout with Paypal"}
+              {isPaymentStart ? "Đang xử lí thanh toán..." : "Thanh toán"}
             </Button>
           </div>
         </div>

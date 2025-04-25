@@ -41,6 +41,17 @@ export const updateOrderStatus = createAsyncThunk(
     return response.data;
   }
 );
+export const fetchRevenueOrders = createAsyncThunk(
+  "adminOrder/fetchRevenueOrders",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("/api/admin/orders");
+      return response.data.orders;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const adminOrderSlice = createSlice({
   name: "adminOrderSlice",

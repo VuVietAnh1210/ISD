@@ -1,24 +1,34 @@
+
 export const registerFormControls = [
   {
     name: "userName",
-    label: "User Name",
-    placeholder: "Enter your user name",
+    label: "Tên người dùng",
+    placeholder: "Nhập tên người dùng của bạn",
     componentType: "input",
     type: "text",
   },
   {
     name: "email",
     label: "Email",
-    placeholder: "Enter your email",
+    placeholder: "Nhập email của bạn",
     componentType: "input",
     type: "email",
   },
   {
     name: "password",
-    label: "Password",
-    placeholder: "Enter your password",
+    label: "Mật khẩu",
+    placeholder: "Nhập mật khẩu của bạn",
     componentType: "input",
     type: "password",
+    showPasswordToggle: true,
+  },
+  {
+    name: "confirmPassword",
+    label: "Xác nhận lại mật khẩu",
+    placeholder: "Xác nhận lại mật khẩu của bạn",
+    componentType: "input",
+    type: "password",
+    showPasswordToggle: true, // Bật tính năng hiện/ẩn mật khẩu
   },
 ];
 
@@ -26,123 +36,124 @@ export const loginFormControls = [
   {
     name: "email",
     label: "Email",
-    placeholder: "Enter your email",
+    placeholder: "Nhập email của bạn",
     componentType: "input",
     type: "email",
   },
   {
     name: "password",
-    label: "Password",
-    placeholder: "Enter your password",
+    label: "Mật khẩu",
+    placeholder: "Nhập mật khẩu của bạn ",
     componentType: "input",
     type: "password",
+    showPasswordToggle: true,
   },
 ];
 
 export const addProductFormElements = [
   {
-    label: "Title",
+    label: "Tiêu đề",
     name: "title",
     componentType: "input",
     type: "text",
-    placeholder: "Enter product title",
+    placeholder: "Nhập tiêu đề sản phẩm",
   },
   {
-    label: "Description",
+    label: "Mô tả",
     name: "description",
     componentType: "textarea",
-    placeholder: "Enter product description",
+    placeholder: "Nhập mô tả sản phầm",
   },
+  // {
+  //   label: "Loại",
+  //   name: "category",
+  //   componentType: "select",
+  //   options: [
+  //     { id: "men", label: "Nam" },
+  //     { id: "women", label: "Nữ" },
+  //     { id: "kids", label: "Trẻ em" },
+  //     // { id: "accessories", label: "Accessories" },
+  //     // { id: "footwear", label: "Footwear" },
+  //   ],
+  // },
+  // {
+  //   label: "Thương hiệu",
+  //   name: "brand",
+  //   componentType: "select",
+  //   options: [
+  //     { id: "nike", label: "Nike" },
+  //     { id: "adidas", label: "Adidas" },
+  //     { id: "puma", label: "Puma" },
+  //     { id: "levi", label: "Levi's" },
+  //     { id: "zara", label: "Zara" },
+  //     { id: "h&m", label: "H&M" },
+  //   ],
+  // },
   {
-    label: "Category",
-    name: "category",
-    componentType: "select",
-    options: [
-      { id: "men", label: "Men" },
-      { id: "women", label: "Women" },
-      { id: "kids", label: "Kids" },
-      { id: "accessories", label: "Accessories" },
-      { id: "footwear", label: "Footwear" },
-    ],
-  },
-  {
-    label: "Brand",
-    name: "brand",
-    componentType: "select",
-    options: [
-      { id: "nike", label: "Nike" },
-      { id: "adidas", label: "Adidas" },
-      { id: "puma", label: "Puma" },
-      { id: "levi", label: "Levi's" },
-      { id: "zara", label: "Zara" },
-      { id: "h&m", label: "H&M" },
-    ],
-  },
-  {
-    label: "Price",
+    label: "Giá",
     name: "price",
     componentType: "input",
     type: "number",
-    placeholder: "Enter product price",
+    placeholder: "Nhập giá sản phẩm",
   },
   {
-    label: "Sale Price",
+    label: "Giá ưu đãi",
     name: "salePrice",
     componentType: "input",
     type: "number",
-    placeholder: "Enter sale price (optional)",
+    placeholder: "Nhập giá ưu đãi ( nếu có)",
   },
   {
-    label: "Total Stock",
+    label: "Tổng số sản phẩm",
     name: "totalStock",
     componentType: "input",
     type: "number",
-    placeholder: "Enter total stock",
+    placeholder: "Nhập tổng số sản phẩm",
   },
-];
+]
 
 export const shoppingViewHeaderMenuItems = [
   {
     id: "home",
-    label: "Home",
+    label: "TRANG CHỦ",
     path: "/shop/home",
   },
   {
     id: "products",
-    label: "Products",
+    label: "SẢN PHẨM",
     path: "/shop/listing",
   },
-  {
-    id: "men",
-    label: "Men",
-    path: "/shop/listing",
-  },
-  {
-    id: "women",
-    label: "Women",
-    path: "/shop/listing",
-  },
-  {
-    id: "kids",
-    label: "Kids",
-    path: "/shop/listing",
-  },
-  {
-    id: "footwear",
-    label: "Footwear",
-    path: "/shop/listing",
-  },
+  // {
+  //   id: "men",
+  //   label: "Men",
+  //   path: "/shop/listing",
+  // },
+  // {
+  //   id: "women",
+  //   label: "Women",
+  //   path: "/shop/listing",
+  // },
+  // {
+  //   id: "kids",
+  //   label: "Kids",
+  //   path: "/shop/listing",
+  // },
+  // {
+  //   id: "footwear",
+  //   label: "Footwear",
+  //   path: "/shop/listing",
+  // },
   {
     id: "accessories",
-    label: "Accessories",
+    label: "BỘ SƯU TẬP",
     path: "/shop/listing",
   },
   {
     id: "search",
-    label: "Search",
+    label: "ĐƠN HÀNG",
     path: "/shop/search",
   },
-];
+]
 
 export const categoryOptionsMap = {
   men: "Men",
@@ -150,7 +161,7 @@ export const categoryOptionsMap = {
   kids: "Kids",
   accessories: "Accessories",
   footwear: "Footwear",
-};
+}
 
 export const brandOptionsMap = {
   nike: "Nike",
@@ -159,7 +170,7 @@ export const brandOptionsMap = {
   levi: "Levi",
   zara: "Zara",
   "h&m": "H&M",
-};
+}
 
 export const filterOptions = {
   category: [
@@ -177,48 +188,49 @@ export const filterOptions = {
     { id: "zara", label: "Zara" },
     { id: "h&m", label: "H&M" },
   ],
-};
+}
 
 export const sortOptions = [
-  { id: "price-lowtohigh", label: "Price: Low to High" },
-  { id: "price-hightolow", label: "Price: High to Low" },
-  { id: "title-atoz", label: "Title: A to Z" },
-  { id: "title-ztoa", label: "Title: Z to A" },
-];
+  { id: "price-lowtohigh", label: "Giá: Thấp đến cao" },
+  { id: "price-hightolow", label: "Giá: Cao đến thấp" },
+  { id: "title-atoz", label: "Tiêu đề: A đến Z" },
+  { id: "title-ztoa", label: "Tiêu đề: Z đến A" },
+]
 
 export const addressFormControls = [
   {
-    label: "Address",
+    label: "Địa chỉ",
     name: "address",
     componentType: "input",
     type: "text",
-    placeholder: "Enter your address",
+    placeholder: "Nhập địa chỉ của bạn",
   },
   {
-    label: "City",
+    label: "Thành phố",
     name: "city",
     componentType: "input",
     type: "text",
-    placeholder: "Enter your city",
+    placeholder: "Nhập thành phố của bạn",
   },
+  // {
+  //   label: "Mã bưu chính",
+  //   name: "pincode",
+  //   componentType: "input",
+  //   type: "text",
+  //   placeholder: "Nhập mã bưu chính",
+  // },
   {
-    label: "Pincode",
-    name: "pincode",
-    componentType: "input",
-    type: "text",
-    placeholder: "Enter your pincode",
-  },
-  {
-    label: "Phone",
+    label: "Số điện thoại",
     name: "phone",
     componentType: "input",
     type: "text",
-    placeholder: "Enter your phone number",
+    placeholder: "Nhập số điện thoại của bạn",
   },
   {
-    label: "Notes",
+    label: "Ghi chú",
     name: "notes",
     componentType: "textarea",
-    placeholder: "Enter any additional notes",
+    placeholder: "Nhập ghi chú bổ sung ",
   },
 ];
+

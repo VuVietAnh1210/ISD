@@ -11,7 +11,7 @@ const registerUser = async (req, res) => {
     if (checkUser)
       return res.json({
         success: false,
-        message: "User Already exists with the same email! Please try again",
+        message: "Tài khoản email đã được đăng kí, vui lòng thử lại",
       });
 
     const hashPassword = await bcrypt.hash(password, 12);
@@ -24,13 +24,13 @@ const registerUser = async (req, res) => {
     await newUser.save();
     res.status(200).json({
       success: true,
-      message: "Registration successful",
+      message: "Đăng kí thành công",
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured",
+      message: "Một số lỗi xảy ra",
     });
   }
 };
@@ -44,7 +44,7 @@ const loginUser = async (req, res) => {
     if (!checkUser)
       return res.json({
         success: false,
-        message: "User doesn't exists! Please register first",
+        message: "Người dùng không tồn tại! Vui lòng đăng ký trước",
       });
 
     const checkPasswordMatch = await bcrypt.compare(
@@ -54,7 +54,7 @@ const loginUser = async (req, res) => {
     if (!checkPasswordMatch)
       return res.json({
         success: false,
-        message: "Incorrect password! Please try again",
+        message: "Mật khẩu không đúng! Vui lòng thử lại",
       });
 
     const token = jwt.sign(
@@ -70,7 +70,7 @@ const loginUser = async (req, res) => {
 
     res.cookie("token", token, { httpOnly: true, secure: false }).json({
       success: true,
-      message: "Logged in successfully",
+      message: "Đăng nhập thành công",
       user: {
         email: checkUser.email,
         role: checkUser.role,
@@ -82,7 +82,7 @@ const loginUser = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured",
+      message: "Đã xảy ra một số lỗi",
     });
   }
 };
@@ -92,7 +92,7 @@ const loginUser = async (req, res) => {
 const logoutUser = (req, res) => {
   res.clearCookie("token").json({
     success: true,
-    message: "Logged out successfully!",
+    message: "Đăng xuất thành công!",
   });
 };
 

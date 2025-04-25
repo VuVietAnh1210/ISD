@@ -42,18 +42,19 @@ function ShoppingOrders() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Order History</CardTitle>
+        <CardTitle>Lịch sử đặt hàng</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Order Status</TableHead>
-              <TableHead>Order Price</TableHead>
+              <TableHead>Mã đơn hàng</TableHead>
+              <TableHead>Ngày đặt hàng</TableHead>
+              <TableHead>Giá đơn hàng</TableHead>
+              <TableHead>Trạng thái đơn hàng</TableHead>
+              
               <TableHead>
-                <span className="sr-only">Details</span>
+                <span className="sr-only">Chi tiết</span>
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -63,12 +64,15 @@ function ShoppingOrders() {
                   <TableRow>
                     <TableCell>{orderItem?._id}</TableCell>
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
+                    <TableCell>{orderItem?.totalAmount?.toLocaleString('vi-VN')} VNĐ</TableCell>
+                    
+                    
                     <TableCell>
                       <Badge
                         className={`py-1 px-3 ${
-                          orderItem?.orderStatus === "confirmed"
+                          orderItem?.orderStatus === "Đã xác nhận"
                             ? "bg-green-500"
-                            : orderItem?.orderStatus === "rejected"
+                            : orderItem?.orderStatus === "Bị từ chối"
                             ? "bg-red-600"
                             : "bg-black"
                         }`}
@@ -76,7 +80,7 @@ function ShoppingOrders() {
                         {orderItem?.orderStatus}
                       </Badge>
                     </TableCell>
-                    <TableCell>${orderItem?.totalAmount}</TableCell>
+                    
                     <TableCell>
                       <Dialog
                         open={openDetailsDialog}
@@ -90,7 +94,7 @@ function ShoppingOrders() {
                             handleFetchOrderDetails(orderItem?._id)
                           }
                         >
-                          View Details
+                          Xem chi tiết
                         </Button>
                         <ShoppingOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>

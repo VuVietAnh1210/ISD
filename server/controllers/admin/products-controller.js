@@ -15,7 +15,7 @@ const handleImageUpload = async (req, res) => {
     console.log(error);
     res.json({
       success: false,
-      message: "Error occured",
+      message: "Đã xảy ra lỗi",
     });
   }
 };
@@ -58,7 +58,7 @@ const addProduct = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: "Đã xảy ra lỗi",
     });
   }
 };
@@ -76,7 +76,7 @@ const fetchAllProducts = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: "Đã xảy ra lỗi",
     });
   }
 };
@@ -101,7 +101,7 @@ const editProduct = async (req, res) => {
     if (!findProduct)
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: "Không tìm thấy sản phẩm nào!",
       });
 
     findProduct.title = title || findProduct.title;
@@ -124,7 +124,7 @@ const editProduct = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: "Đã xảy ra lỗi",
     });
   }
 };
@@ -143,13 +143,13 @@ const deleteProduct = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Product delete successfully",
+      message: "Sản phẩm đã được xóa thành công",
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: "Đã xảy ra lỗi",
     });
   }
 };

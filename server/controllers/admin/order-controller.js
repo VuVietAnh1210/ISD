@@ -7,7 +7,7 @@ const getAllOrdersOfAllUsers = async (req, res) => {
     if (!orders.length) {
       return res.status(404).json({
         success: false,
-        message: "No orders found!",
+        message: "Không tim thấy đơn hàng nào!",
       });
     }
 
@@ -19,7 +19,7 @@ const getAllOrdersOfAllUsers = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Đã xảy ra lỗi!",
     });
   }
 };
@@ -33,7 +33,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Order not found!",
+        message: "Không tìm thấy đơn hàng nào!",
       });
     }
 
@@ -45,7 +45,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Đã xảy ra lỗi!",
     });
   }
 };
@@ -60,7 +60,7 @@ const updateOrderStatus = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Order not found!",
+        message: "Không tìm thấy đơn hàng nào!",
       });
     }
 
@@ -68,13 +68,13 @@ const updateOrderStatus = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Order status is updated successfully!",
+      message: "Trạng thái đơn hàng đã được cập nhật thành công!",
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Đã xảy ra lỗi!",
     });
   }
 };

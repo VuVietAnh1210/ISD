@@ -55,7 +55,7 @@ const createOrder = async (req, res) => {
 
         return res.status(500).json({
           success: false,
-          message: "Error while creating paypal payment",
+          message: "Lỗi khi tạo thanh toán paypal",
         });
       } else {
         const newlyCreatedOrder = new Order({
@@ -90,7 +90,7 @@ const createOrder = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Đã xảy ra lỗi!",
     });
   }
 };
@@ -104,7 +104,7 @@ const capturePayment = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Order can not be found",
+        message: "Không tìm thấy đơn hàng",
       });
     }
 
@@ -135,14 +135,14 @@ const capturePayment = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Order confirmed",
+      message: "Đơn hàng đã xác nhận",
       data: order,
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Đã xảy ra lỗi!",
     });
   }
 };
@@ -156,7 +156,7 @@ const getAllOrdersByUser = async (req, res) => {
     if (!orders.length) {
       return res.status(404).json({
         success: false,
-        message: "No orders found!",
+        message: "Không tìm thấy đơn hàng nào!",
       });
     }
 
@@ -168,7 +168,7 @@ const getAllOrdersByUser = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Đã xảy ra lỗi!",
     });
   }
 };
@@ -182,7 +182,7 @@ const getOrderDetails = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Order not found!",
+        message: "Không tìm thấy đơn hàng!",
       });
     }
 
@@ -194,7 +194,7 @@ const getOrderDetails = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Đã xảy ra lỗi!",
     });
   }
 };

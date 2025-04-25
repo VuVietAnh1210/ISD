@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
+import { formatPrice } from "@/lib/utils";
 
 function UserCartItemsContent({ cartItem }) {
   const { user } = useSelector((state) => state.auth);
@@ -31,7 +32,7 @@ function UserCartItemsContent({ cartItem }) {
           const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
           if (getQuantity + 1 > getTotalStock) {
             toast({
-              title: `Only ${getQuantity} quantity can be added for this item`,
+              title: `Chỉ thêm được ${getQuantity} sản phẩm này`,
               variant: "destructive",
             });
 
@@ -53,7 +54,7 @@ function UserCartItemsContent({ cartItem }) {
     ).then((data) => {
       if (data?.payload?.success) {
         toast({
-          title: "Cart item is updated successfully",
+          title: "Mục giỏ hàng được cập nhật thành công",
         });
       }
     });
@@ -65,7 +66,7 @@ function UserCartItemsContent({ cartItem }) {
     ).then((data) => {
       if (data?.payload?.success) {
         toast({
-          title: "Cart item is deleted successfully",
+          title: " Sản phầm đã được xóa thành công",
         });
       }
     });
@@ -105,11 +106,10 @@ function UserCartItemsContent({ cartItem }) {
       </div>
       <div className="flex flex-col items-end">
         <p className="font-semibold">
-          $
-          {(
+          {formatPrice(
             (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
             cartItem?.quantity
-          ).toFixed(2)}
+          )}
         </p>
         <Trash
           onClick={() => handleCartItemDelete(cartItem)}

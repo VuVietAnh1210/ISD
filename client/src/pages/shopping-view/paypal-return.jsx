@@ -27,7 +27,7 @@ function PaypalReturnPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Processing Payment...Please wait!</CardTitle>
+        <CardTitle>Đang thanh toán...vui lòng đợi!</CardTitle>
       </CardHeader>
     </Card>
   );
