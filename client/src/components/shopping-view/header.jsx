@@ -80,55 +80,65 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
-  const { user } = useSelector((state) => state.auth)
-  const { cartItems } = useSelector((state) => state.shopCart)
-  const [openCartSheet, setOpenCartSheet] = useState(false)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const [openCartSheet, setOpenCartSheet] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   function handleLogout() {
-    dispatch(logoutUser())
+    dispatch(logoutUser());
   }
 
   useEffect(() => {
-    dispatch(fetchCartItems(user?.id))
-  }, [dispatch, user?.id])
+    if (user?.id) dispatch(fetchCartItems(user?.id));
+  }, [dispatch, user?.id]);
 
+  // ✅ Nếu chưa đăng nhập thì hiện 2 nút:
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center gap-4">
+        <Link to="/auth/login">
+          <Button className="bg-black text-white hover:bg-zinc-800">Đăng nhập</Button>
+        </Link>
+        <Link to="/auth/register">
+          <Button variant="outline" className="border-black text-black hover:bg-zinc-100">
+            Đăng ký
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  // ✅ Nếu đã đăng nhập thì hiện icon cũ
   return (
-    // Thêm 'relative' và 'lg:-translate-x-2' (hoặc giá trị khác)
     <div className="relative flex lg:items-center lg:flex-row flex-col gap-4 lg:-translate-x-10">
-      {/* Biểu tượng tìm kiếm */}
       <Button onClick={() => navigate("/shop/search")} variant="text" size="icon">
-        <Search className="w-28 h-28"/>
+        <Search className="w-28 h-28" />
         <span className="sr-only">Search</span>
       </Button>
 
-      {/* Biểu tượng thông báo */}
       <Button variant="text" size="icon">
         <Bell className="w-28 h-28" />
         <span className="sr-only">Notifications</span>
       </Button>
 
-      {/* Biểu tượng giỏ hàng */}
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <Button onClick={() => setOpenCartSheet(true)} variant="text" size="icon" className="relative">
           <ShoppingCart className="w-28 h-28" />
-          {/* Điều chỉnh lại vị trí số lượng cho phù hợp nếu cần */}
           <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white">{cartItems?.items?.length || 0}</span>
           <span className="sr-only">User cart</span>
         </Button>
         <UserCartWrapper
-            setOpenCartSheet={setOpenCartSheet}
-            cartItems={cartItems && cartItems.items && cartItems.items.length > 0 ? cartItems.items : []}
+          setOpenCartSheet={setOpenCartSheet}
+          cartItems={cartItems && cartItems.items && cartItems.items.length > 0 ? cartItems.items : []}
         />
       </Sheet>
 
-      {/* Biểu tượng tài khoản */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-           {/* Tăng kích thước Avatar nếu muốn đồng bộ với icon */}
           <Avatar className="bg-black cursor-pointer w-16 h-16">
-            <AvatarFallback className="bg-black text-white font-extrabold text-xl"> {/* Tăng cỡ chữ nếu cần */}
+            <AvatarFallback className="bg-black text-white font-extrabold text-xl">
               {user?.userName ? user.userName[0].toUpperCase() : "U"}
             </AvatarFallback>
           </Avatar>
@@ -148,8 +158,9 @@ function HeaderRightContent() {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-)
+  );
 }
+
 
 
 // --- Component ShoppingHeader với logo đã được chỉnh sửa ---

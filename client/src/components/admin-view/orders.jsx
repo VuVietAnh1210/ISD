@@ -45,9 +45,8 @@ function AdminOrdersView() {
     "Đang vận chuyển": "bg-indigo-500 hover:bg-indigo-600",
     "Bị từ chối": "bg-red-600 hover:bg-red-700",
   };
-  
+
   const defaultColor = "bg-black hover:bg-gray-700";
-  
 
   return (
     <Card>
@@ -73,19 +72,20 @@ function AdminOrdersView() {
                   <TableRow>
                     <TableCell>{orderItem?._id}</TableCell>
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
-                    <TableCell>{orderItem?.totalAmount?.toLocaleString('vi-VN')} VNĐ</TableCell>
+                    <TableCell>
+                      {orderItem?.totalAmount?.toLocaleString("vi-VN")} VNĐ
+                    </TableCell>
 
                     <TableCell>
-  <Badge
-    className={`py-1 px-3 text-white ${
-      statusColors[orderItem?.orderStatus] || defaultColor
-    }`}
-  >
-    {orderItem?.orderStatus}
-  </Badge>
-</TableCell>
+                      <Badge
+                        className={`py-1 px-3 text-white ${
+                          statusColors[orderItem?.orderStatus] || defaultColor
+                        }`}
+                      >
+                        {orderItem?.orderStatus}
+                      </Badge>
+                    </TableCell>
 
-                    
                     <TableCell>
                       <Dialog
                         open={openDetailsDialog}

@@ -5,28 +5,28 @@ function CheckAuth({ isAuthenticated, user, children }) {
 
   console.log(location.pathname, isAuthenticated);
 
+  // ✅ Redirect từ "/" theo vai trò hoặc mặc định
   if (location.pathname === "/") {
-    if (!isAuthenticated) {
-      return <Navigate to="/auth/login" />;
-    } else {
+    if (isAuthenticated) {
       if (user?.role === "admin") {
         return <Navigate to="/admin/dashboard" />;
       } else {
         return <Navigate to="/shop/home" />;
       }
+    } else {
+      // Mặc định redirect tới /shop/home dù chưa đăng nhập
+      return <Navigate to="/shop/home" />;
     }
   }
 
-  if (
-    !isAuthenticated &&
-    !(
-      location.pathname.includes("/login") ||
-      location.pathname.includes("/register")
-    )
-  ) {
+  // ✅ Cho phép truy cập các trang public kể cả chưa đăng nhập
+  const publicPaths = ["/auth/login", "/auth/register", "/shop/home"];
+
+  if (!isAuthenticated && !publicPaths.some((path) => location.pathname.startsWith(path))) {
     return <Navigate to="/auth/login" />;
   }
 
+  // ✅ Nếu đã đăng nhập mà vào login/register thì redirect ra ngoài
   if (
     isAuthenticated &&
     (location.pathname.includes("/login") ||
@@ -39,6 +39,7 @@ function CheckAuth({ isAuthenticated, user, children }) {
     }
   }
 
+  // ✅ User không phải admin nhưng vào trang admin
   if (
     isAuthenticated &&
     user?.role !== "admin" &&
@@ -47,6 +48,7 @@ function CheckAuth({ isAuthenticated, user, children }) {
     return <Navigate to="/unauth-page" />;
   }
 
+  // ✅ Admin mà truy cập vào route của shop
   if (
     isAuthenticated &&
     user?.role === "admin" &&
