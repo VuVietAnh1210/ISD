@@ -1,60 +1,56 @@
 import { Route, Routes } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+
+import { checkAuth } from "./store/auth-slice";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Layouts
 import AuthLayout from "./components/auth/layout";
+import AdminLayout from "./components/admin-view/layout";
+import ShoppingLayout from "./components/shopping-view/layout";
+
+// Pages
 import AuthLogin from "./pages/auth/login";
 import AuthRegister from "./pages/auth/register";
-import AdminLayout from "./components/admin-view/layout";
 import AdminDashboard from "./pages/admin-view/dashboard";
 import AdminProducts from "./pages/admin-view/products";
 import AdminOrders from "./pages/admin-view/orders";
 import AdminFeatures from "./pages/admin-view/features";
-import ShoppingLayout from "./components/shopping-view/layout";
-import NotFound from "./pages/not-found";
+import AdminRevenuePage from "./pages/admin-view/revenue"; // ✅ Trang Doanh thu
 import ShoppingHome from "./pages/shopping-view/home";
 import ShoppingListing from "./pages/shopping-view/listing";
 import ShoppingCheckout from "./pages/shopping-view/checkout";
 import ShoppingAccount from "./pages/shopping-view/account";
-import CheckAuth from "./components/common/check-auth"; // Đảm bảo đường dẫn này chính xác
-import UnauthPage from "./pages/unauth-page";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { checkAuth } from "./store/auth-slice";
-import { Skeleton } from "@/components/ui/skeleton";
 import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
-import AdminRevenuePage from "./pages/admin-view/revenue";
+import NotFound from "./pages/not-found";
+import UnauthPage from "./pages/unauth-page";
 
+// Common
+import CheckAuth from "./components/common/check-auth";
 
 function App() {
-  const { user, isAuthenticated, isLoading } = useSelector(
-    (state) => state.auth
-  );
+  const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  if (isLoading) return <Skeleton className="w-[800] bg-black h-[600px]" />;
-
-  // Quan trọng: Kiểm tra giá trị isAuthenticated ở đây khi test
-  console.log("App.js - isLoading:", isLoading, "isAuthenticated:", isAuthenticated, "user:", user);
+  if (isLoading) return <Skeleton className="w-[800px] bg-black h-[600px]" />;
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
-        {/* ---- SỬA LẠI Ở ĐÂY ---- */}
-        {/* Xóa 2 Route "/" cũ */}
-        {/* Thêm Route mới cho "/", element là CheckAuth để nó tự xử lý */}
+        {/* Kiểm tra xác thực trước */}
         <Route
           path="/"
-          element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user} />
-            /* Không cần children */
-          }
+          element={<CheckAuth isAuthenticated={isAuthenticated} user={user} />}
         />
-        {/* ---- KẾT THÚC SỬA ĐỔI ---- */}
 
+        {/* Auth */}
         <Route
           path="/auth"
           element={
@@ -66,6 +62,8 @@ function App() {
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>
+
+        {/* Admin */}
         <Route
           path="/admin"
           element={
@@ -78,10 +76,10 @@ function App() {
           <Route path="products" element={<AdminProducts />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="features" element={<AdminFeatures />} />
-          <Route path="revenue" element={<AdminRevenuePage />} />
-
-          
+          <Route path="revenue" element={<AdminRevenuePage />} /> {/* ✅ Doanh thu */}
         </Route>
+
+        {/* Shopping */}
         <Route
           path="/shop"
           element={
@@ -97,8 +95,9 @@ function App() {
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="search" element={<SearchProducts />} />
-
         </Route>
+
+        {/* Unauth & 404 */}
         <Route path="/unauth-page" element={<UnauthPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -106,4 +105,4 @@ function App() {
   );
 }
 
-export default App;                          
+export default App;
