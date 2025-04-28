@@ -198,10 +198,28 @@ const getOrderDetails = async (req, res) => {
     });
   }
 };
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .select("userId cartId cartItems addressInfo orderStatus totalAmount createdAt");
+
+    res.status(200).json({
+      success: true,
+      data: orders,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Đã xảy ra lỗi khi lấy tất cả đơn hàng!",
+    });
+  }
+};
 
 module.exports = {
   createOrder,
   capturePayment,
   getAllOrdersByUser,
   getOrderDetails,
+  getAllOrders,
 };
